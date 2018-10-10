@@ -1,0 +1,195 @@
+<html>
+    <head>
+        <title>Where's That Bill?</title>
+        <link rel="shortcut icon" type="image/png" href="/assets/logo.png">
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/tether/1.4.3/js/tether.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="/css/index.css">
+        <script src="/js/index.js"></script>
+        <script src="/js/repGetter.js"></script>
+    </head>
+    <body>
+        <header>
+            <div class="row">
+                <div class="col-sm-2 center-block text-center">
+                    <a href=""><img src="/assets/logo.png" class="flow-icn"></a>
+                </div>
+                <div class="col-sm-8 vertical-center">
+
+                    <h4>Where's That Bill?🇨🇦</h4>
+                    <!--<h5><i>The site for confused people who just want to know who to yell at about that one bill you should be outraged about.</i></h5>-->
+                </div>
+                <div class="col-sm-2"></div>
+            </div>
+        </header>
+        <div id="tracker" style="display: none">
+            <div class="percent-80">
+                <div class="row">
+                    <div class="col-sm-3 vertical-center"><img src="/assets/draft.png" class="half-flow-icn" alt="draft"></div>
+                    <div class="col-sm-3 vertical-center">
+                        <div>
+                            <img src="/assets/house.png" class="flow-icn" alt="U.S. House of Representatives"><br><br>
+                            <img src="/assets/senate.png" class="flow-icn" alt="U.S. Senate">
+                        </div>
+                    </div>
+                    <div class="col-sm-3 vertical-center"><img src="/assets/wh.png" class="flow-icn" alt="The White House"></div>
+                    <div class="col-sm-3 vertical-center"><img src="/assets/signed.png" class="half-flow-icn" alt="Law"></div>
+                </div>
+            </div>
+            <button id="select-other" onclick="$('#search-div').show(); $('#select-other').hide()">Select a Different Bill</button>
+        </div>
+        <div id="search-div">
+            <label>Enter the name of a bill</label><br>
+            <input type="text" placeholder="i.e. Tax Bill, Obamacare... Anything!">
+            <br><br>
+            <h5>OR</h5>
+            <h6>Select a Bill Being Talked About in The News</h6>
+            <div class="btn-group" role="group" aria-label="Bill Selection Criteria">
+                <button type="button" class="btn btn-secondary active">Recent</button>
+                <button type="button" class="btn btn-secondary">Popular</button>
+            </div>
+            <br><br>
+            <div>
+                <button onclick="getBillById('1')">Bill 1</button>
+                <button onclick="getBillById('2')">Bill 2</button>
+                <button onclick="getBillById('3')">Bill 3</button>
+                <button onclick="getBillById('4')">Bill 4</button>
+                <button onclick="getBillById('5')">Bill 5</button>
+            </div>
+        </div>
+        <br><br><br>
+        <div>
+            <button class="btn btn-large button btn-primary" onclick="getYourReps()">GET ME REPS</button>
+            <div id="repTarget">
+            </div>
+        </div>
+        <footer>
+            <div>Website by Michael Albinson &copy; 2017-2018</div>
+            <div>Where's That Bill? is written in python and is open source. <a href="" target="_blank">See the GitHub repo.</a></div>
+            <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+            <div class="row">
+                <div class="col-sm-2 col-sm-offset-10">
+                    <a href="/about">About</a>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Address Modal -->
+        <div class="modal fade" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="addressModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Your Address Below</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="line-1">Address</label><br>
+                                <label for="city">City</label><br>
+                                <label for="state">State</label><br>
+                            </div>
+                            <div class="col-sm-9">
+                                <input id="line-1" type="text"><br>
+                                <input id="city" type="text"><br>
+                                <select id="state">
+                                    <option value="NULL">SELECT A STATE</option>
+                                    <option value="AL">Alabama</option>
+                                    <option value="AK">Alaska</option>
+                                    <option value="AZ">Arizona</option>
+                                    <option value="AR">Arkansas</option>
+                                    <option value="CA">California</option>
+                                    <option value="CO">Colorado</option>
+                                    <option value="CT">Connecticut</option>
+                                    <option value="DE">Delaware</option>
+                                    <option value="DC">District Of Columbia</option>
+                                    <option value="FL">Florida</option>
+                                    <option value="GA">Georgia</option>
+                                    <option value="HI">Hawaii</option>
+                                    <option value="ID">Idaho</option>
+                                    <option value="IL">Illinois</option>
+                                    <option value="IN">Indiana</option>
+                                    <option value="IA">Iowa</option>
+                                    <option value="KS">Kansas</option>
+                                    <option value="KY">Kentucky</option>
+                                    <option value="LA">Louisiana</option>
+                                    <option value="ME">Maine</option>
+                                    <option value="MD">Maryland</option>
+                                    <option value="MA">Massachusetts</option>
+                                    <option value="MI">Michigan</option>
+                                    <option value="MN">Minnesota</option>
+                                    <option value="MS">Mississippi</option>
+                                    <option value="MO">Missouri</option>
+                                    <option value="MT">Montana</option>
+                                    <option value="NE">Nebraska</option>
+                                    <option value="NV">Nevada</option>
+                                    <option value="NH">New Hampshire</option>
+                                    <option value="NJ">New Jersey</option>
+                                    <option value="NM">New Mexico</option>
+                                    <option value="NY">New York</option>
+                                    <option value="NC">North Carolina</option>
+                                    <option value="ND">North Dakota</option>
+                                    <option value="OH">Ohio</option>
+                                    <option value="OK">Oklahoma</option>
+                                    <option value="OR">Oregon</option>
+                                    <option value="PA">Pennsylvania</option>
+                                    <option value="RI">Rhode Island</option>
+                                    <option value="SC">South Carolina</option>
+                                    <option value="SD">South Dakota</option>
+                                    <option value="TN">Tennessee</option>
+                                    <option value="TX">Texas</option>
+                                    <option value="UT">Utah</option>
+                                    <option value="VT">Vermont</option>
+                                    <option value="VA">Virginia</option>
+                                    <option value="WA">Washington</option>
+                                    <option value="WV">West Virginia</option>
+                                    <option value="WI">Wisconsin</option>
+                                    <option value="WY">Wyoming</option>
+                                </select><br>
+
+                            </div>
+                        </div>
+                        <br>
+                        <h4>OR</h4>
+                        <h6>Provide a Valid US ZIP Code</h6>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="zip">ZIP Code</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input id="zip" type="number" placeholder="Valid US ZIP Code" min="10000"
+                                       max="99999" maxlength="5">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <label for="saveAddr">Save this address for later?</label>
+                        <input id="saveAddr" type="checkbox">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="newSearch()" data-dismiss="modal">Search!</button><br><br>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Error Modal -->
+        <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">An Error Occurred!</h5>
+                    </div>
+                    <div class="modal-body">
+                        Something went wrong :(
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,67 @@
+body {
+   text-align: center;
+}
+
+header {
+    max-height: 200px;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+}
+
+.row {
+    margin: 0 !important;
+}
+
+.percent-80 {
+    padding-left: 10%;
+    padding-right: 10%;
+    margin: 0;
+}
+
+.flow-icn {
+    width: 50%;
+}
+
+img.rep-img {
+    max-width: 180px;
+}
+
+.half-flow-icn {
+    width: 25%;
+}
+
+input {
+    width: 50%;
+}
+
+.center-flex {
+    justify-content: center;
+}
+
+.vertical-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+footer {
+    background-color: black;
+    min-height: 250px;
+    color: white;
+    text-align: center;
+}
+
+footer a {
+    color: lightblue
+}
+
+footer a:hover {
+    color: lightblue
+}
