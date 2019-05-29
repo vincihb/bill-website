@@ -3,7 +3,8 @@ from CongressCache import CongressCache
 import requests
 import json
 
-def getMissingImg(first, last):
+
+def get_missing_img(first, last):
 	# first check if we've already cached the result to be kind to others
 	cache = get_cached_photo_url(first_name=first, last_name=last)
 	if cache.available():
@@ -60,6 +61,7 @@ def get_bioguide_url(first, last, last_name_only=False):
 		return get_bioguide_url(first, last, last_name_only=True)
 
 	return url
+
 
 # gets a photo from Wikipedia using their API
 def get_wiki_photo(first, last):

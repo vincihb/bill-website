@@ -7,8 +7,8 @@ class DatabaseManager:
 		self._connection = mysql.connect(
 			host='localhost',
 			user='root',
-			password='simple',
-			database='example',
+			password='',
+			database='cit-test',
 			charset='utf8mb4',
 			cursorclass=mysql.cursors.DictCursor)
 
@@ -51,6 +51,9 @@ class DatabaseManager:
 
 	def build_db(self):
 		table = """
+				DELETE DATABASE IF EXISTS `cit-test`;
+				CREATE DATABASE IF NOT EXISTS `cit-test`;
+		
 				CREATE TABLE `bill` (
     				`id` int(11) NOT NULL AUTO_INCREMENT,
     				`name` varchar(255) COLLATE utf8_bin NOT NULL,

@@ -1,7 +1,8 @@
 from flask import Flask, send_file, send_from_directory, request
 from management import Manager
 from Bill import BillManager
-from Souper import getMissingImg
+from Souper import get_missing_img
+from config.ConfReader import conf
 
 app = Flask(__name__, static_url_path='/client/static')
 app.debug = True
@@ -55,7 +56,7 @@ def get_a_bill():
 def get_missing():
 	data = request.get_json()
 	if 'first' in data and 'last' in data:
-		return getMissingImg(data['first'], data['last'])
+		return get_missing_img(data['first'], data['last'])
 	else:
 		print('information missing from request')
 		return ''
@@ -80,4 +81,4 @@ def canadian_root():
 	return send_file('client/html/ca/index.html')
 
 
-app.run(port=5000)
+app.run(port=conf.PORT)

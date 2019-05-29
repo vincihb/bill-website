@@ -1,7 +1,8 @@
 import requests
-import picklin
+from Pickler import Pickler
+import datetime
 
-#our final list
+# our final list
 finalList = []
 tmpDict = {}
 
@@ -28,5 +29,5 @@ print('The final list is:')
 for it in finalList:
 	print(it)
 
-picklin.save_obj(finalList, 'training set')
+Pickler.save_obj(finalList, 'training set' + str(datetime.datetime))
 

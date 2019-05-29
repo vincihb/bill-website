@@ -1,5 +1,5 @@
 import requests
-import picklin
+from Pickler import Pickler
 
 
 class Manager:
@@ -11,20 +11,20 @@ class Manager:
 
 	def get_list(self, offline=True):
 		if offline:
-			self.unverified = picklin.load_obj('test_list')
+			self.unverified = Pickler.load_obj('test_list')
 			return self.unverified
 		else:
 			for i in range(1, 100):
 				print(i)
 				headers = {'Authorization': '127ae28c3362490c94e16d337a103f70'}
 				res = requests.get(
-					'https://newsapi.org/v2/everything?domains=cnn.com&language=en&page=' + str(i), eaders=headers
+					'https://newsapi.org/v2/everything?domains=cnn.com&language=en&page=' + str(i), headers=headers
 				).json()
 
 				for article in res['articles']:
 					self.unverified.append({'title': article['title'], 'url': article['url']})
 
-			picklin.save_obj(self.unverified, 'test_list')
+			Pickler.save_obj(self.unverified, 'test_list')
 			return self.unverified
 
 	def get_next(self):
@@ -48,4 +48,4 @@ class Manager:
 
 	def write_out_list(self):
 		self.clear_duplicates()
-		picklin.save_obj(self.verified, 'verified_training_set')
+		Pickler.save_obj(self.verified, 'verified_training_set')
