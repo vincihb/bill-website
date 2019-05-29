@@ -10,6 +10,6 @@ class Pickler:
 
 
     @staticmethod
-    def load_obj( name):
+    def load_obj(name):
         with open('obj/' + name + '.pkl', 'rb') as f:
             return pickle.load(f)
