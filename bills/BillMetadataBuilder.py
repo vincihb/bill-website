@@ -12,9 +12,13 @@ class BillMetadataBuilder:
         self.bow = []
         self.top_25 = []
         self.top_25_words = []
+        self.top_10_nouns = []
+        self.top_10_nouns_freq = []
         self.sentences = []
         self.title_pos = []
         self.summary_pos = []
+
+        self.pos_tagged = False
 
     def get_bag_of_words(self):
         # if we've already done the parse, don't do it twice
@@ -32,18 +36,7 @@ class BillMetadataBuilder:
         self.bow = bill_bow
         return bill_bow
 
-    @staticmethod
-    def get_stripped_bag_of_words(corpus):
-        stop_words = list(punctuation) + stopwords.words('english')
-        bow = []
-        for w in corpus.lower().split():
-            # don't carry single letters into the BOW
-            if w not in stop_words and len(w) > 1:
-                bow.append(w)
-
-        return bow
-
-    def get_top_25(self):
+    def get_top_25_words(self):
         if len(self.bow) == 0:
             self.get_bag_of_words()
 
@@ -66,19 +59,58 @@ class BillMetadataBuilder:
         self.sentences = tokens
         return tokens
 
-    def get_pos_tags(self):
-        if len(self.summary_pos) > 0:
+    def get_title_pos(self):
+        if len(self.title_pos) > 0:
+            return self.title_pos
+
+        self.title_pos = self.get_pos(self.bill['title'])
+        return self.title_pos
+
+    def get_summary_pos(self):
+        # if there's no summary, return as there's no point in trying to tag it
+        # or if it's already been tagger, don't do it again
+        if len(self.bill['summary']) < 1 or len(self.summary_pos) > 0:
             return self.summary_pos
 
-        title_tokes = word_tokenize(self.bill['title'])
-        self.title_pos = pos_tag(title_tokes)
-        summary_tokens = word_tokenize(self.bill['summary'])
-        self.summary_pos = pos_tag(summary_tokens)
+        self.summary_pos = self.get_pos(self.bill['summary'])
         return self.summary_pos
 
-    def get_top_25_nouns(self):
+    def get_pos_tags(self):
+        # if we've already tagged, don't redo
+        if self.pos_tagged:
+            return self.summary_pos
+
+        self.get_title_pos()
+        self.get_summary_pos()
+        self.pos_tagged = True
+        return self.summary_pos
+
+    def get_top_n_nouns(self, n=10):
         tags = self.get_pos_tags()
-        tags
+        if len(tags) == 0 or len(self.top_10_nouns) > 0:
+            return self.top_10_nouns
+
+        nouns = [pair[0] for pair in tags if pair[1] == 'NNP' or pair[1] == 'NN' or pair[1] == 'NNS']
+        c = Counter(nouns)
+        self.top_10_nouns_freq = c.most_common(n)
+        self.top_10_nouns = [w[0] for w in self.top_10_nouns_freq]
+        return self.top_10_nouns
+
+    @staticmethod
+    def get_stripped_bag_of_words(corpus):
+        stop_words = list(punctuation) + stopwords.words('english') + ['bill', 'act']
+        bow = []
+        for w in corpus.lower().split():
+            # don't carry single letters into the BOW
+            if w not in stop_words and len(w) > 1:
+                bow.append(w)
+
+        return bow
+
+    @staticmethod
+    def get_pos(corpus):
+        corpus_tokens = word_tokenize(corpus.lower())
+        return pos_tag(corpus_tokens)
 
     def __str__(self):
         return 'Parser for Bill: ' + self.bill['bill_id']
