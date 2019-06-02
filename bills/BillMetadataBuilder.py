@@ -1,5 +1,5 @@
 from nltk.corpus import stopwords
-from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.tokenize import word_tokenize
 from nltk import pos_tag
 from collections import Counter
 from string import punctuation
@@ -20,25 +20,25 @@ class BillMetadataBuilder:
 
         self.pos_tagged = False
 
-    def get_bag_of_words(self):
+    def get_bag_of_words(self, corpus=''):
         # if we've already done the parse, don't do it twice
         if len(self.bow) != 0:
             return self.bow
 
         b = self.bill
         # we weight title words slightly higher by including the title and short title
-        bill_corpus = \
-            b['title'] + ' ' + b['short_title'] + ' ' + b['sponsor_name'] + ' ' + b['sponsor_name'] + ' ' + \
-            b['summary'] + ' ' + b['committees']
+        if corpus == '':
+            corpus = \
+                b['title'] + ' ' + b['short_title'] + ' ' + b['sponsor_name'] + ' ' + b['sponsor_name'] + ' ' + \
+                b['summary'] + ' ' + b['committees']
 
-        bill_bow = self.get_stripped_bag_of_words(bill_corpus)
-
+        bill_bow = self.get_stripped_bag_of_words(corpus)
         self.bow = bill_bow
         return bill_bow
 
-    def get_top_25_words(self):
+    def get_top_25_words(self, corpus=''):
         if len(self.bow) == 0:
-            self.get_bag_of_words()
+            self.get_bag_of_words(corpus)
 
         if len(self.top_25) > 0:
             return self.top_25_words
@@ -50,14 +50,6 @@ class BillMetadataBuilder:
         # extract just the words, just in case we just want those
         self.top_25_words = [w[0] for w in self.top_25]
         return self.top_25_words
-
-    def get_sentence_tokens(self):
-        if len(self.sentences) > 0:
-            return self.sentences
-
-        tokens = sent_tokenize(self.bill['summary'])
-        self.sentences = tokens
-        return tokens
 
     def get_title_pos(self):
         if len(self.title_pos) > 0:
