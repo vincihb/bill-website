@@ -31,7 +31,15 @@ class ExtractiveSummarizer:
     def set_corpus(self, new_corpus):
         self.corpus = new_corpus
 
-    """ SUMMARIZATION METHODS"""
+    def get_summary(self):
+        if self.mode == 'basic':
+            self.get_first_n_summary()
+        elif self.mode == 'best_n':
+            self.get_best_n_summary()
+        else:
+            self.get_similarity_summary()
+
+    """ SUMMARIZATION METHODS """
 
     """
     Works best for web-news based articles that have the most important content towards the front of the article
@@ -237,7 +245,7 @@ class ExtractiveSummarizer:
         return (len(self.summary) / self.body_len) > pct
 
     def has_exceeded_len_count(self, count):
-        return self.summary.count('. ') + self.summary.count('.\n') > count
+        return self.summary.count('. ') + self.summary.count('.\n') >= count
 
     # select our maximum length determination strategy
     # default is percentage, but we can do sentence count if desired

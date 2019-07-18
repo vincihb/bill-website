@@ -1,30 +1,15 @@
-from threading import Thread, active_count, current_thread
+from threading import Thread, active_count
+from PropublicaScraper import PropublicaScraper
+
 
 class BillCacheManager:
+    @staticmethod
+    def start():
+        print(active_count())
+        t = Thread(target=BillCacheManager().refresh_cache, name="Async Bill Caching Thread")
+        t.start()
 
-	def __init__(self):
-		pass
-
-	def start(self):
-		c_t_i = current_thread()
-		print(c_t_i.getName())
-
-	def get_recent_bills(self):
-		pass
-
-	def get_popular_bills(self):
-		pass
-
-	def cache(self, batch: list):
-		pass
-
-
-print(active_count())
-t = Thread(target=BillCacheManager().start, name="Async Bill Caching Thread")
-t.start()
-
-
-c_t = current_thread()
-print(c_t.getName())
-print(t.getName())
-print(active_count())
+    @staticmethod
+    def refresh_cache():
+        print('Refresh the cache man!')
+        PropublicaScraper.get_bills_for_session(116)

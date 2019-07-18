@@ -1,33 +1,46 @@
+import time
 from Pickler import Pickler
-from bills.BillMetadataBuilder import BillMetadataBuilder
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-import pandas as pd
-import numpy as np
+from bills.ExtractiveSummarizer import ExtractiveSummarizer
+from nltk.tokenize import sent_tokenize, word_tokenize
 
-# NLTK_SET = 'nltk_113_500'
-#
-# bills = Pickler.load_obj('complete/Bill Set-116-Complete')
-#
-# print(len(bills))
-#
-# key_data = dict()
-# for key in bills:
-#
-#     bill = bills[key]
-#     if bill['bill_type'] != 's' and bill['bill_type'] != 'hr' or bill['enacted'] is not None:
-#         continue
-#
-#     bill_metadata = dict()
-#     metadata_builder = BillMetadataBuilder(bill)
-#
-#     bill_metadata['bow'] = metadata_builder.get_bag_of_words()
-#     bill_metadata['top_25'] = metadata_builder.get_top_25()
-#     print(bill['bill_type'] + ': ' + bill['short_title'])
-#     print(bill_metadata['top_25'][:10])
-#     print('')
-#     key_data[key] = bill_metadata
+start_time = time.time()
 
-with open('obj/pandas_dfs/test.json', 'w+') as f:
-    dfj = pd.DataFrame(np.random.randn(5, 2), columns=list('AB'))
-    f.write(dfj.to_json())
+articles = Pickler.load_obj('test-articles')
+
+# article = dict()
+# article['title'] = ""
+# article['summary'] = """
+# """
+
+
+article = articles[4]
+# Pickler.save_obj(articles, 'test-articles')
+
+
+summ = ExtractiveSummarizer(article)
+
+short = summ.get_first_n_summary(shorten_to_len=4)
+short_2 = summ.get_similarity_summary(shorten_to_len=4)
+saved_pct = (len(short)/len(article['summary'])) * 100
+
+print('')
+print(article['title'])
+print(short)
+print('')
+print('Compressed to {0:0.2f}% of original'.format(saved_pct))
+print('')
+print('Program executed in: {0:.2f}s'.format(time.time() - start_time))
+
+def diff(summ1, summ2):
+    sentences = sent_tokenize(summ1)
+    s_s2 = sent_tokenize(summ1)
+    similarity = 0
+    for s in sentences:
+        if s in summ2:
+            similarity += 1
+
+    # divide the number of common sentences by the
+    # average num of sentences in both summaries
+    return similarity / ((len(sentences) + len(s_s2)) / 2)
+
+print(diff(short, short_2))
