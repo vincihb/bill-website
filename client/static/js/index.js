@@ -1,31 +1,32 @@
 "use strict";
-var res;
 
-function getBillById(id) {
-    $.post({
-        url: '/bill',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({bill_id: id})
-    }, function(data) {
-        if (data) {
-            $('#tracker').show();
-            $('#search-div').hide();
-            $('#select-other').show();
+$(document).ready(function() {
+    var res;
 
-            data = JSON.parse(data);
-            res = data;
-            setBillState(res.state)
-        }
-        else
-            console.log('invalid query :(')// invalid query :(
-    })
-}
+    function getBillById(id) {
+        $.post({
+            url: '/bill',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({bill_id: id})
+        }, function(data) {
+            if (data) {
+                $('#tracker').show();
+                $('#search-div').hide();
+                $('#select-other').show();
 
-function setBillState(state) {
+                data = JSON.parse(data);
+                res = data;
+                setBillState(res.state)
+            }
+            else
+                console.log('invalid query :(')// invalid query :(
+        })
+    }
 
-}
+    function setBillState(state) {
 
-$(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    }
+
+    // $('[data-toggle="tooltip"]').tooltip()
 });

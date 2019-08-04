@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block css_includes %}
+    <link rel="stylesheet" href="css/index.css">
+{% endblock %}
+{% block js_includes %}
+    <script src="js/index.js"></script>
+{% endblock %}
+{% block body %}
+    <br />
+    <h1>Where's That Bill?</h1>
+    <h5><i>The site for confused people who just want to know who to yell at about that one bill you should be outraged about.</i></h5>
+
+    <div id="tracker" class="hidden">
+            <div class="percent-80">
+                <div class="row">
+                    <div class="col-sm-3 vertical-center"><img src="assets/draft.png" class="half-flow-icn" alt="draft"></div>
+                    <div class="col-sm-3 vertical-center">
+                        <div>
+                            <img src="assets/house.png" class="flow-icn" alt="U.S. House of Representatives"><br><br>
+                            <img src="assets/senate.png" class="flow-icn" alt="U.S. Senate">
+                        </div>
+                    </div>
+                    <div class="col-sm-3 vertical-center"><img src="assets/wh.png" class="flow-icn" alt="The White House"></div>
+                    <div class="col-sm-3 vertical-center"><img src="assets/signed.png" class="half-flow-icn" alt="Law"></div>
+                </div>
+            </div>
+            <button id="select-other" onclick="$('#search-div').show(); $('#select-other').hide()" class="btn btn-md btn-primary">Select a Different Bill</button>
+        </div>
+        <div id="search-div">
+            <label>Enter the name of a bill</label><br>
+            <input type="text" placeholder="i.e. Tax Bill, Obamacare... Anything!">
+            <br><br>
+            <h5>OR</h5>
+            <h6>Select a Bill Being Talked About in The News</h6>
+            <div class="btn-group" role="group" aria-label="Bill Selection Criteria">
+                <button type="button" class="btn btn-secondary active">Recent</button>
+                <button type="button" class="btn btn-secondary">Popular</button>
+            </div>
+            <br><br>
+            <div>
+                <button onclick="getBillById('1')" class="btn btn-sm btn-primary">Bill 1</button>
+                <button onclick="getBillById('2')" class="btn btn-sm btn-primary">Bill 2</button>
+                <button onclick="getBillById('3')" class="btn btn-sm btn-primary">Bill 3</button>
+                <button onclick="getBillById('4')" class="btn btn-sm btn-primary">Bill 4</button>
+                <button onclick="getBillById('5')" class="btn btn-sm btn-primary">Bill 5</button>
+            </div>
+        </div>
+        <br><br><br>
+        <div>
+            <button class="btn btn-md btn-primary" onclick="getYourReps()">GET ME REPS</button>
+            <div id="repTarget">
+            </div>
+        </div>
+
+    {% include 'modals/error-modal.html' %}
+    {% include 'modals/address-modal.html' %}
+
+{% endblock %}

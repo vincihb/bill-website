@@ -52,6 +52,7 @@ input {
 }
 
 footer {
+    padding-top: 1rem;
     background-color: black;
     min-height: 250px;
     color: white;
@@ -64,4 +65,24 @@ footer a {
 
 footer a:hover {
     color: lightblue
+}
+
+header {
+    background-color: white;
+    border-bottom: solid black 2px;
+    height: 5rem;
+}
+
+header img {
+    height: 4rem;
+    margin-left: 1rem;
+    margin-top: 0.5rem;
+}
+
+div.push {
+    height: 15rem;
+}
+
+.hidden {
+    display: none;
 }

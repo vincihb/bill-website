@@ -3,7 +3,6 @@ from Pickler import Pickler
 
 
 class Manager:
-
 	def __init__(self):
 		self.idx = 0
 		self.unverified = []

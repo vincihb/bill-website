@@ -1,5 +1,6 @@
 from flask import Flask, send_file, send_from_directory, request
 from Souper import get_missing_img
+from client.TemplateManager.TemplateManager import template_manager
 from config.ConfReader import conf
 
 app = Flask(__name__, static_url_path='/client/static')
@@ -8,17 +9,17 @@ app.debug = True
 
 @app.route("/", methods=['GET'])
 def index_route():
-	return send_file('client/html/index.html')
+	return template_manager.get_template('index.html')
 
 
 @app.route("/about", methods=['GET'])
 def about_route():
-	return send_file('client/html/about.html')
+	return template_manager.get_template('about.html')
 
 
 @app.route("/filter", methods=['GET'])
 def filter_route():
-	return send_file('client/html/filter.html')
+	return template_manager.get_template('filter.html')
 
 
 @app.route("/result", methods=['POST'])
@@ -32,13 +33,6 @@ def get_result_and_send_new_title():
 		return m.get_next()
 
 
-@app.route("/bill", methods=['POST'])
-def get_a_bill():
-	data = request.get_json()
-	bill = bill_manager.parse_request(data)
-	return bill.get_json()
-
-
 @app.route("/missing", methods=['POST'])
 def get_missing():
 	data = request.get_json()
@@ -47,6 +41,7 @@ def get_missing():
 	else:
 		print('information missing from request')
 		return ''
+
 
 @app.route('/js/<path:path>')
 def send_js(path):
@@ -65,7 +60,7 @@ def send_asset(path):
 
 @app.route('/ca/', methods=['GET'])
 def canadian_root():
-	return send_file('client/html/ca/index.html')
+	return template_manager.get_template('index.html')
 
 
 app.run(port=conf.PORT)

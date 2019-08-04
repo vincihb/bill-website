@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="shortcut icon" type="image/png" href="assets/logo.png">
+        <link rel="stylesheet" href="css/bootstrap4.css">
+
+        {% block css_includes %}{% endblock %}
+
+        <script src="/js/jquery.js"></script>
+        <script src="/js/tether.js"></script>
+        <script src="js/bootstrap4.js"></script>
+        <script src="js/repGetter.js"></script>
+        {% block js_includes %}{% endblock %}
+    </head>
+    <body>
+
+        {% include 'partials/header.html' %}
+
+        {% block body %}{% endblock %}
+        <div class="push"></div>
+
+        {% include 'partials/footer.html' %}
+        {% include 'modals/error-modal.html' %}
+    </body>
+</html>

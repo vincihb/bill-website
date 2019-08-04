@@ -43,4 +43,5 @@ def diff(summ1, summ2):
     # average num of sentences in both summaries
     return similarity / ((len(sentences) + len(s_s2)) / 2)
 
+
 print(diff(short, short_2))
