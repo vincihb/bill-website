@@ -71,6 +71,7 @@ header {
     background-color: white;
     border-bottom: solid black 2px;
     height: 5rem;
+    text-align: left;
 }
 
 header img {
