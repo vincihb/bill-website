@@ -1,7 +1,7 @@
 import time
-from Pickler import Pickler
+from tool.Pickler import Pickler
 from bills.ExtractiveSummarizer import ExtractiveSummarizer
-from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.tokenize import sent_tokenize
 
 start_time = time.time()
 

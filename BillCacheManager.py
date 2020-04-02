@@ -1,5 +1,5 @@
 from threading import Thread, active_count
-from PropublicaScraper import PropublicaScraper
+from api.PropublicaScraper import PropublicaScraper
 
 
 class BillCacheManager:
