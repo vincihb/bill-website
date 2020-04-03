@@ -1,5 +1,5 @@
 from flask import Flask, send_from_directory, request
-from Souper import get_missing_img
+from api.BioguideImageScraper import get_missing_img
 from client.TemplateManager.TemplateManager import template_manager
 from config.ConfReader import conf
 

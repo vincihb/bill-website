@@ -1,5 +1,18 @@
+@font-face {
+    font-family: 'attraction';
+    src: url('/css/font/attractionpersonaluse-rx16-webfont.woff2') format('woff2'),
+         url('/css/font/attractionpersonaluse-rx16-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 body {
-   text-align: center;
+    text-align: center;
+}
+
+h1, h2 {
+    font-family: 'attraction', sans-serif;
 }
 
 header {

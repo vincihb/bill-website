@@ -1,5 +1,5 @@
 import json
-from DBItem import DBItem
+from db.DBItem import DBItem
 
 
 class CongressCache(DBItem):

@@ -1,6 +1,6 @@
 import requests
 import json
-from Bill import BillManager
+from db.Bill import BillManager
 
 b_manager = BillManager()
 
