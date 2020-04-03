@@ -3,13 +3,13 @@ import pickle
 
 
 class Pickler:
+
     @staticmethod
-    def save_obj(obj, name):
-        with open('obj/' + name + '.pkl', 'wb') as f:
+    def save_obj(obj, path_to_save_obj):
+        with open(path_to_save_obj, 'wb') as f:
             pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
-
     @staticmethod
-    def load_obj(name):
-        with open('obj/' + name + '.pkl', 'rb') as f:
+    def load_obj(path_to_object):
+        with open(path_to_object, 'rb') as f:
             return pickle.load(f)

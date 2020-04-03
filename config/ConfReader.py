@@ -1,8 +1,10 @@
 import json
+from os import path
 
 
 class ConfReader:
-    CONFIG_INDEX = './config/index.json'
+    _local_dir = path.dirname(path.abspath(__file__))
+    CONFIG_INDEX = path.join(_local_dir, 'index.json')
 
     def __init__(self):
         with open(self.CONFIG_INDEX) as json_file:
