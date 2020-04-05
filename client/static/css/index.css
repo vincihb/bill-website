@@ -10,11 +10,13 @@
 :root {
     --theme-color: red;
     --darker-theme: darkred;
-    --accent-color: blue;
+    --accent-color: lightblue;
+    --background-color: white;
 }
 
 body {
     text-align: center;
+    background-color: var(--background-color);
 }
 
 h1, h2 {
