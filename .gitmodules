@@ -1,0 +1,3 @@
+[submodule "client/static/albinsonium"]
+	path = client/static/albinsonium
+	url = https://github.com/michaelalbinson/albinsonium
