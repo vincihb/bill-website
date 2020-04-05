@@ -5,24 +5,37 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="shortcut icon" type="image/png" href="assets/logo.png">
-        <link rel="stylesheet" href="css/bootstrap4.css">
+
+        <link rel="stylesheet" type="text/css" href="/alb-css/bootstrap4.css">
+        <link rel="stylesheet" type="text/css" href="/alb-css/icon-link.css">
+        <link rel="stylesheet" type="text/css" href="/css/index.css">
+        <link rel="stylesheet" type="text/css" href="/css/gdpr.css">
+        <link rel="stylesheet" type="text/css" href="/css/google-fonts.css" media="all">
+
+        <script type="text/javascript" src="/alb-js/util/request.js"></script>
+        <script type="text/javascript" src="/alb-js/util/ElementFactory.js"></script>
+
+        <script type="text/javascript" src="/alb-js/base/base-dom.js"></script>
+        <script type="text/javascript" src="/alb-js/base/icon-link.js"></script>
+        <script type="text/javascript" src="/alb-js/modal/modal.js"></script>
+        <script type="text/javascript" src="/alb-js/modal/error-modal.js"></script>
+        <script type="text/javascript" src="/alb-js/modal/warning-modal.js"></script>
+        <script type="text/javascript" src="/alb-js/modal/success-modal.js"></script>
+
+        <script type="text/javascript" src="/alb-js/base/app-header.js"></script>
+        <script type="text/javascript" src="/alb-js/base/app-footer.js"></script>
+        <script type="text/javascript" src="/alb-js/base/app-page.js"></script>
+        <script type="text/javascript" src="/js/base/wtb-page.js"></script>
+
+        <script type="text/javascript" src="/alb-js/util/cookie-listener.js"></script>
 
         {% block css_includes %}{% endblock %}
-
-        <script src="/js/jquery.js"></script>
-        <script src="/js/tether.js"></script>
-        <script src="js/bootstrap4.js"></script>
-        <script src="js/repGetter.js"></script>
         {% block js_includes %}{% endblock %}
     </head>
-    <body>
-
-        {% include 'partials/header.html' %}
-
-        {% block body %}{% endblock %}
-        <div class="push"></div>
-
-        {% include 'partials/footer.html' %}
-        {% include 'modals/error-modal.html' %}
-    </body>
+    <wtb-page>
+        <div slot="content">
+            {% block body %}{% endblock %}
+            <div class="push"></div>
+        </div>
+    </wtb-page>
 </html>
