@@ -7,6 +7,12 @@
 
 }
 
+:root {
+    --theme-color: red;
+    --darker-theme: darkred;
+    --accent-color: blue;
+}
+
 body {
     text-align: center;
 }
