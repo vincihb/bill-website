@@ -13,7 +13,7 @@ class BillCache:
 
     def store_bill(self, data_tuple):
         sql = 'INSERT INTO `BILLS` (ID, TITLE, CONGRESS_SESSION, INTRODUCED_DATE, CONGRESS_URL, BILL_URL,' \
-              'ACTIVE, BILL_ID, ENACTED, VETOED, SUMMARY, LATEST_MAJOR_ACTION) VALUES (?, ?, ?, ?, ?, ?, ' \
+              'ACTIVE, ENACTED, VETOED, SUMMARY, LATEST_MAJOR_ACTION) VALUES (?, ?, ?, ?, ?, ?, ' \
               '?, ?, ?, ?, ?, ?)'
         self.db.exec_insert(sql, data_tuple)
         # Note: make sure data is in tuple form
