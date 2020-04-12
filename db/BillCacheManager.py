@@ -1,5 +1,5 @@
 from threading import Thread, active_count
-from api.propublica.PropublicaScraper import PropublicaScraper
+from api.propublica.ToPickle import ToPickle
 
 
 class BillCacheManager:
@@ -12,4 +12,4 @@ class BillCacheManager:
     @staticmethod
     def refresh_cache():
         print('Refresh the cache man!')
-        PropublicaScraper.get_bills_for_session(116)
+        ToPickle.get_bills_for_session(116)
