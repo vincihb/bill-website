@@ -7,10 +7,12 @@
 }
 
 :root {
-    --theme-color: red;
-    --darker-theme: darkred;
-    --accent-color: lightblue;
+    --theme-color: #a80000;
+    --darker-theme: #5e0000;
+    --accent-color: white;
     --background-color: white;
+    --text-color: black;
+    --nuetral-color: blue;
 }
 
 body {

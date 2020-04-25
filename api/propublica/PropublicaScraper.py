@@ -112,3 +112,6 @@ class PropublicaScraper:
         with open('error.txt', 'a+') as err_file:
             err_file.write(message + '\n')
             err_file.write(text + '/n')
+
+
+print(PropublicaScraper.get_senators())
