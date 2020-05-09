@@ -12,6 +12,8 @@ class SqlExecutor:
 
         self.db = sqlite3.connect(self._db_path)
         # load in the database if one doesn't exist before
+        self.db.row_factory = SqlExecutor.dict_factory
+
         if not db_exists:
             self._exec_core()
 
@@ -60,4 +62,11 @@ class SqlExecutor:
     def close(self):
         self.db.close()
         self.is_closed = True
+
+    @staticmethod
+    def dict_factory(cursor, row):
+        d = {}
+        for idx, col in enumerate(cursor.description):
+            d[col[0]] = row[idx]
+        return d
 

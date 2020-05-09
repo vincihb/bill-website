@@ -114,4 +114,4 @@ class PropublicaScraper:
             err_file.write(text + '/n')
 
 
-print(PropublicaScraper.get_senators())
+# print(PropublicaScraper.get_senators())

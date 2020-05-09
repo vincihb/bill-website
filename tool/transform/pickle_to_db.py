@@ -1,8 +1,9 @@
 from tool.Pickler import Pickler
-from api.propublica.PropublicaScraper import PropublicaScraper
+# from api.propublica.PropublicaScraper import PropublicaScraper
 from os import path
 from api.propublica.CongressCache import CongressCache
 from api.propublica.PresidentCache import PresidentCache
+from api.propublica.MemberCache import MemberCache
 from db.SqlExecutor import SqlExecutor
 import json
 import datetime as dt
@@ -13,6 +14,7 @@ class PickleToDB:
         self.pickler = Pickler()
         self.congress_cache = CongressCache()
         self.president_cache = PresidentCache()
+        self.member_cache = MemberCache()
         self.sqlEx = SqlExecutor()
         self.pickle_file = pickle_file
         self.local_dir = path.dirname(path.abspath(__file__))
@@ -68,10 +70,10 @@ class PickleToDB:
             session_data = self.congress_cache.get_congress_session(session_number)
             if session_data is None or president_data is None:
                 break
-            president_start_date = president_data[4]
-            president_end_date = president_data[5]
-            session_start_date = session_data[1]
-            session_end_date = session_data[2]
+            president_start_date = president_data['TOOK_OFFICE']
+            president_end_date = president_data['LEFT_OFFICE']
+            session_start_date = session_data['START_DATE']
+            session_end_date = session_data['END_DATE']
             if president_end_date is None:
                 president_end_date = dt.datetime.today().toordinal()
             if president_start_date <= session_start_date <= president_end_date <= session_end_date:
@@ -85,23 +87,63 @@ class PickleToDB:
             else:
                 print("Wait this should work!")
 
-    def pickle_to_db(self):
+    def populate_house_members_cache(self):
         object_path = path.join(self.local_dir, '..', '..', 'obj', 'complete', self.pickle_file)
         members = self.pickler.load_obj(object_path)
         for keys in members:
-            print(members[keys])
-            # for member_keys in members[keys]:
-            #     exit()
+            member = members[keys]
+            if self.pickle_file == 'House Members.pkl':
+                congressional_body = 'House'
+            else:
+                congressional_body = 'Senate'
+            date_of_birth_string = member.get('date_of_birth')
+            if date_of_birth_string != '':
+                date_of_birth = dt.datetime.strptime(date_of_birth_string, '%Y-%m-%d').toordinal()
+            else:
+                date_of_birth = 0
+            if self.member_cache.get_congress_member_by_id(member['id']) is None:
+                self.member_cache.store_congress_member(member.get('id'), congressional_body, member.get('first_name'),
+                                                        member.get('middle_name'), member.get('last_name'),
+                                                        date_of_birth,
+                                                        member.get('gender'), member.get('party'),
+                                                        member.get('leadership_role'), member.get('twitter_account'),
+                                                        member.get('facebook_account'), member.get('youtube_account'),
+                                                        member.get('cspan_id'), member.get('icpsr_id'),
+                                                        member.get('crp_id'), member.get('fec_candidate_id'),
+                                                        member.get('in_office'), member.get('seniority'),
+                                                        member.get('total_votes'), member.get('missed_votes'),
+                                                        member.get('total_present'), member.get('office'),
+                                                        member.get('phone'), member.get('fax'),
+                                                        member.get('state'), member.get('district'),
+                                                        member.get('at_large'), member.get('senate_class'),
+                                                        member.get('state_rank'), member.get('missed_votes_pct'),
+                                                        member.get('votes_with_party_pct'),
+                                                        member.get('title'))
+
+    def populate_members_to_session(self):
+        object_path = path.join(self.local_dir, '..', '..', 'obj', 'complete', self.pickle_file)
+        members = self.pickler.load_obj(object_path)
+        for keys in members:
+            member = members[keys]
+            member_id = member['id']
+            first_session = member['last_session']
+            last_session = member['first_session']
+            session_num = first_session
+            while session_num <= last_session:
+                if self.member_cache.get_session_from_member(member_id) != []:
+                    session_num += 1
+                    continue
+                self.member_cache.store_congress_member_to_session(session_num, member_id)
+                session_num += 1
 
 
 if __name__ == "__main__":
-    transform = PickleToDB('House Members.pkl')
-    # transform.pickle_to_db()
-    # exit()
+    transform = PickleToDB('Senate Members.pkl')
     transform.populate_president_cache()
     transform.populate_congressional_sessions()
     transform.populate_president_to_session()
-    print(transform.president_cache.get_session_from_president(45))
-    print(transform.president_cache.get_president_by_num(45))
-    a = transform.congress_cache.get_congress_session(116)
-    print(dt.datetime.fromordinal(a[2]))
+    transform.populate_house_members_cache()
+    transform.populate_members_to_session()
+    test = transform.member_cache.get_member_from_session(115)
+    print(test)
+    print(len(test))
