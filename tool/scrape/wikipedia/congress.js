@@ -1,4 +1,9 @@
 'use strict';
+
+/**
+ * Scrape all of the members of congress, metadata and links from the wikipedia pages
+ */
+
 window.lastTry = null;
 
 // pages like: 'https://en.wikipedia.org/wiki/115th_United_States_Congress'
