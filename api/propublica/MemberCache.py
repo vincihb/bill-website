@@ -5,25 +5,42 @@ class MemberCache:
     def __init__(self):
         self.db = SqlExecutor()
 
-    def store_congress_member(self,
-                              id, congressional_body, first_name, mid_name, last_name, dob, gender, party,
+    def store_senate_member(self,
+                              id, first_name, mid_name, last_name, dob, gender, party,
                               leadership_role, twitter_account, facebook_account, youtube_account,
                               cspan_id, icpsr_id, crp_id, fec_candidate_id, in_office, seniority,
-                              total_votes, missed_votes, total_present, office, phone, fax, state,
-                              district, at_large, senate_class, state_rank, missed_votes_pct,
-                              votes_with_party_pct, title):
-        sql = 'INSERT INTO `MEMBER` (ID, CONGRESSIONAL_BODY, FIRST_NAME, MIDDLE_NAME, LAST_NAME, DATE_OF_BIRTH,' \
+                              total_votes, missed_votes, total_present, office, phone, fax, state
+                            , senate_class, state_rank):
+        sql = 'INSERT INTO `SENATE_MEMBER` (ID, FIRST_NAME, MIDDLE_NAME, LAST_NAME, DATE_OF_BIRTH,' \
               'GENDER, PARTY, LEADERSHIP_ROLE, TWITTER_ACCOUNT, FACEBOOK_ACCOUNT, YOUTUBE_ACCOUNT, CSPAN_ID, ' \
               'ICPSR_ID, CRP_ID, FEC_CANDIDATE_ID, IN_OFFICE, SENIORITY, TOTAL_VOTES, MISSED_VOTES, ' \
-              'TOTAL_PRESENT, OFFICE, PHONE, FAX, STATE, DISTRICT, AT_LARGE, SENATE_CLASS, ' \
-              'STATE_RANK, MISSED_VOTES_PCT, VOTES_WITH_PARTY_PCT, TITLE) ' \
-              'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-        self.db.exec_insert(sql, (id, congressional_body, first_name, mid_name, last_name, dob, gender, party,
+              'TOTAL_PRESENT, OFFICE, PHONE, FAX, STATE, SENATE_CLASS, STATE_RANK) ' \
+              'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        self.db.exec_insert(sql, (id, first_name, mid_name, last_name, dob, gender, party,
                                   leadership_role, twitter_account, facebook_account, youtube_account,
                                   cspan_id, icpsr_id, crp_id, fec_candidate_id, in_office, seniority,
                                   total_votes, missed_votes, total_present, office, phone, fax, state,
-                                  district, at_large, senate_class, state_rank, missed_votes_pct,
-                                  votes_with_party_pct, title))
+                                  senate_class, state_rank))
+
+    def store_house_member(self,
+                              id, first_name, mid_name, last_name, dob, gender, party,
+                              leadership_role, twitter_account, facebook_account, youtube_account,
+                              cspan_id, icpsr_id, crp_id, fec_candidate_id, in_office, seniority,
+                              total_votes, missed_votes, total_present, office, phone, fax, state,
+                              district, at_large, state_rank, missed_votes_pct,
+                              votes_with_party_pct):
+        sql = 'INSERT INTO `MEMBER` (ID, FIRST_NAME, MIDDLE_NAME, LAST_NAME, DATE_OF_BIRTH,' \
+              'GENDER, PARTY, LEADERSHIP_ROLE, TWITTER_ACCOUNT, FACEBOOK_ACCOUNT, YOUTUBE_ACCOUNT, CSPAN_ID, ' \
+              'ICPSR_ID, CRP_ID, FEC_CANDIDATE_ID, IN_OFFICE, SENIORITY, TOTAL_VOTES, MISSED_VOTES, ' \
+              'TOTAL_PRESENT, OFFICE, PHONE, FAX, STATE, DISTRICT, AT_LARGE, ' \
+              'MISSED_VOTES_PCT, VOTES_WITH_PARTY_PCT) ' \
+              'VALUES()'
+        self.db.exec_insert(sql, (id, first_name, mid_name, last_name, dob, gender, party,
+                                  leadership_role, twitter_account, facebook_account, youtube_account,
+                                  cspan_id, icpsr_id, crp_id, fec_candidate_id, in_office, seniority,
+                                  total_votes, missed_votes, total_present, office, phone, fax, state,
+                                  district, at_large, state_rank, missed_votes_pct,
+                                  votes_with_party_pct))
         # Note, make sure that the member_data is a tuple and that it is structured properly in the order as above
 
     def store_congress_member_to_session(self, session_num, member_id):

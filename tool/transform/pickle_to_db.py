@@ -92,6 +92,8 @@ class PickleToDB:
         members = self.pickler.load_obj(object_path)
         for keys in members:
             member = members[keys]
+            print(members[keys])
+            exit()
             if self.pickle_file == 'House Members.pkl':
                 congressional_body = 'House'
             else:
@@ -123,27 +125,25 @@ class PickleToDB:
     def populate_members_to_session(self):
         object_path = path.join(self.local_dir, '..', '..', 'obj', 'complete', self.pickle_file)
         members = self.pickler.load_obj(object_path)
-        for keys in members:
-            member = members[keys]
+        for key in members:
+            member = members[key]
             member_id = member['id']
             first_session = member['last_session']
             last_session = member['first_session']
-            session_num = first_session
-            while session_num <= last_session:
-                if self.member_cache.get_session_from_member(member_id) != []:
-                    session_num += 1
-                    continue
+            if len(self.member_cache.get_session_from_member(member_id)) == (last_session - first_session) + 1:
+                continue
+
+            for session_num in range(first_session, last_session + 1):
                 self.member_cache.store_congress_member_to_session(session_num, member_id)
-                session_num += 1
 
 
 if __name__ == "__main__":
-    transform = PickleToDB('Senate Members.pkl')
+    transform = PickleToDB('House Members.pkl')
     transform.populate_president_cache()
     transform.populate_congressional_sessions()
     transform.populate_president_to_session()
     transform.populate_house_members_cache()
     transform.populate_members_to_session()
-    test = transform.member_cache.get_member_from_session(115)
+    test = transform.member_cache.get_member_from_session(116)
     print(test)
     print(len(test))
