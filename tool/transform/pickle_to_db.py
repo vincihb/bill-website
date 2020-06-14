@@ -18,6 +18,10 @@ class PickleToDB:
         self.sqlEx = SqlExecutor()
         self.pickle_file = pickle_file
         self.local_dir = path.dirname(path.abspath(__file__))
+        if self.pickle_file == 'House Members.pkl':
+            self.congressional_body = 'House'
+        else:
+            self.congressional_body = 'Senate'
 
     def populate_president_cache(self):
         object_path = path.join(self.local_dir, '..', '..', 'data', 'json_files', 'presidents.json')
@@ -87,24 +91,21 @@ class PickleToDB:
             else:
                 print("Wait this should work!")
 
-    def populate_house_members_cache(self):
+    def populate_members_cache(self):
         object_path = path.join(self.local_dir, '..', '..', 'obj', 'complete', self.pickle_file)
         members = self.pickler.load_obj(object_path)
         for keys in members:
             member = members[keys]
-            print(members[keys])
-            exit()
-            if self.pickle_file == 'House Members.pkl':
-                congressional_body = 'House'
-            else:
-                congressional_body = 'Senate'
+
             date_of_birth_string = member.get('date_of_birth')
             if date_of_birth_string != '':
                 date_of_birth = dt.datetime.strptime(date_of_birth_string, '%Y-%m-%d').toordinal()
             else:
                 date_of_birth = 0
-            if self.member_cache.get_congress_member_by_id(member['id']) is None:
-                self.member_cache.store_congress_member(member.get('id'), congressional_body, member.get('first_name'),
+
+            if self.congressional_body is 'House':
+                if self.member_cache.get_house_member_by_id(member['id']) is None:
+                    self.member_cache.store_house_member(member.get('id'), member.get('first_name'),
                                                         member.get('middle_name'), member.get('last_name'),
                                                         date_of_birth,
                                                         member.get('gender'), member.get('party'),
@@ -117,10 +118,22 @@ class PickleToDB:
                                                         member.get('total_present'), member.get('office'),
                                                         member.get('phone'), member.get('fax'),
                                                         member.get('state'), member.get('district'),
-                                                        member.get('at_large'), member.get('senate_class'),
-                                                        member.get('state_rank'), member.get('missed_votes_pct'),
-                                                        member.get('votes_with_party_pct'),
-                                                        member.get('title'))
+                                                        member.get('at_large'), member.get('missed_votes_pct'),
+                                                        member.get('votes_with_party_pct'))
+            else:
+                if self.member_cache.get_senate_member_by_id(member['id']) is None:
+                    self.member_cache.store_senate_member(member.get('id'), member.get('first_name'),
+                                                          member.get('middle_name'), member.get('last_name'),
+                                                          date_of_birth, member.get('gender'), member.get('party'),
+                                                          member.get('leadership_role'), member.get('twitter_account'),
+                                                          member.get('facebook_account'), member.get('youtube_account'),
+                                                          member.get('cspan_id'), member.get('icpsr_id'),
+                                                          member.get('crp_id'), member.get('fec_candidate_id'),
+                                                          member.get('in_office'), member.get('seniority'),
+                                                          member.get('total_votes'), member.get('missed_votes'),
+                                                          member.get('total_present'), member.get('office'),
+                                                          member.get('phone'), member.get('fax'), member.get('state'),
+                                                          member.get('senate_class'), member.get('state_rank'))
 
     def populate_members_to_session(self):
         object_path = path.join(self.local_dir, '..', '..', 'obj', 'complete', self.pickle_file)
@@ -130,11 +143,18 @@ class PickleToDB:
             member_id = member['id']
             first_session = member['last_session']
             last_session = member['first_session']
-            if len(self.member_cache.get_session_from_member(member_id)) == (last_session - first_session) + 1:
-                continue
+            if self.congressional_body is 'House':
+                if len(self.member_cache.get_session_from_house_member_id(member_id)) == (last_session - first_session) + 1:
+                    continue
 
-            for session_num in range(first_session, last_session + 1):
-                self.member_cache.store_congress_member_to_session(session_num, member_id)
+                for session_num in range(first_session, last_session + 1):
+                    self.member_cache.store_house_member_to_session(session_num, member_id)
+            else:
+                if len(self.member_cache.get_session_from_senate_member_id(member_id)) == (last_session - first_session) + 1:
+                    continue
+
+                for session_num in range(first_session, last_session + 1):
+                    self.member_cache.store_senate_member_to_session(session_num, member_id)
 
 
 if __name__ == "__main__":
@@ -142,8 +162,8 @@ if __name__ == "__main__":
     transform.populate_president_cache()
     transform.populate_congressional_sessions()
     transform.populate_president_to_session()
-    transform.populate_house_members_cache()
+    transform.populate_members_cache()
     transform.populate_members_to_session()
-    test = transform.member_cache.get_member_from_session(116)
+    test = transform.member_cache.get_house_member_from_session(115)
     print(test)
     print(len(test))
