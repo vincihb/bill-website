@@ -2,7 +2,8 @@ from tool.Pickler import Pickler
 from os import path
 from db.CongressCache import CongressCache
 from db.PresidentCache import PresidentCache
-from db.HouseMemberCache import MemberCache
+from db.HouseMemberCache import HouseMemberCache
+from db.SenateMemberCache import SenateMemberCache
 from db.BillCache import BillCache
 from db.SqlExecutor import SqlExecutor
 import json
@@ -14,7 +15,8 @@ class PickleToDB:
         self.pickler = Pickler()
         self.congress_cache = CongressCache()
         self.president_cache = PresidentCache()
-        self.member_cache = MemberCache()
+        self.house_member_cache = HouseMemberCache()
+        self.senate_member_cache = SenateMemberCache()
         self.bill_cache = BillCache()
         self.sqlEx = SqlExecutor()
         self.pickle_file = pickle_file
@@ -105,36 +107,36 @@ class PickleToDB:
                 date_of_birth = 0
 
             if self.congressional_body is 'House':
-                if self.member_cache.get_house_member_by_id(member['id']) is None:
-                    self.member_cache.store_house_member(member.get('id'), member.get('first_name'),
-                                                        member.get('middle_name'), member.get('last_name'),
-                                                        date_of_birth,
-                                                        member.get('gender'), member.get('party'),
-                                                        member.get('leadership_role'), member.get('twitter_account'),
-                                                        member.get('facebook_account'), member.get('youtube_account'),
-                                                        member.get('cspan_id'), member.get('icpsr_id'),
-                                                        member.get('crp_id'), member.get('fec_candidate_id'),
-                                                        member.get('in_office'), member.get('seniority'),
-                                                        member.get('total_votes'), member.get('missed_votes'),
-                                                        member.get('total_present'), member.get('office'),
-                                                        member.get('phone'), member.get('fax'),
-                                                        member.get('state'), member.get('district'),
-                                                        member.get('at_large'), member.get('missed_votes_pct'),
-                                                        member.get('votes_with_party_pct'))
+                if self.house_member_cache.get_house_member_by_id(member['id']) is None:
+                    self.house_member_cache.store_house_member(member.get('id'), member.get('first_name'),
+                                                               member.get('middle_name'), member.get('last_name'),
+                                                               date_of_birth,
+                                                               member.get('gender'), member.get('party'),
+                                                               member.get('leadership_role'), member.get('twitter_account'),
+                                                               member.get('facebook_account'), member.get('youtube_account'),
+                                                               member.get('cspan_id'), member.get('icpsr_id'),
+                                                               member.get('crp_id'), member.get('fec_candidate_id'),
+                                                               member.get('in_office'), member.get('seniority'),
+                                                               member.get('total_votes'), member.get('missed_votes'),
+                                                               member.get('total_present'), member.get('office'),
+                                                               member.get('phone'), member.get('fax'),
+                                                               member.get('state'), member.get('district'),
+                                                               member.get('at_large'), member.get('missed_votes_pct'),
+                                                               member.get('votes_with_party_pct'))
             else:
-                if self.member_cache.get_senate_member_by_id(member['id']) is None:
-                    self.member_cache.store_senate_member(member.get('id'), member.get('first_name'),
-                                                          member.get('middle_name'), member.get('last_name'),
-                                                          date_of_birth, member.get('gender'), member.get('party'),
-                                                          member.get('leadership_role'), member.get('twitter_account'),
-                                                          member.get('facebook_account'), member.get('youtube_account'),
-                                                          member.get('cspan_id'), member.get('icpsr_id'),
-                                                          member.get('crp_id'), member.get('fec_candidate_id'),
-                                                          member.get('in_office'), member.get('seniority'),
-                                                          member.get('total_votes'), member.get('missed_votes'),
-                                                          member.get('total_present'), member.get('office'),
-                                                          member.get('phone'), member.get('fax'), member.get('state'),
-                                                          member.get('senate_class'), member.get('state_rank'))
+                if self.senate_member_cache.get_senate_member_by_id(member['id']) is None:
+                    self.senate_member_cache.store_senate_member(member.get('id'), member.get('first_name'),
+                                                                member.get('middle_name'), member.get('last_name'),
+                                                                date_of_birth, member.get('gender'), member.get('party'),
+                                                                member.get('leadership_role'), member.get('twitter_account'),
+                                                                member.get('facebook_account'), member.get('youtube_account'),
+                                                                member.get('cspan_id'), member.get('icpsr_id'),
+                                                                member.get('crp_id'), member.get('fec_candidate_id'),
+                                                                member.get('in_office'), member.get('seniority'),
+                                                                member.get('total_votes'), member.get('missed_votes'),
+                                                                member.get('total_present'), member.get('office'),
+                                                                member.get('phone'), member.get('fax'), member.get('state'),
+                                                                member.get('senate_class'), member.get('state_rank'))
 
     def populate_members_to_session(self):
         object_path = path.join(self.local_dir, '..', '..', 'obj', 'complete', self.pickle_file)
@@ -145,37 +147,50 @@ class PickleToDB:
             first_session = member['last_session']
             last_session = member['first_session']
             if self.congressional_body is 'House':
-                if len(self.member_cache.get_session_from_house_member_id(member_id)) == (last_session - first_session) + 1:
+                if len(self.house_member_cache.get_session_from_house_member_id(member_id)) == (last_session - first_session) + 1:
                     continue
 
                 for session_num in range(first_session, last_session + 1):
-                    self.member_cache.store_house_member_to_session(session_num, member_id)
+                    self.house_member_cache.store_house_member_to_session(session_num, member_id)
             else:
-                if len(self.member_cache.get_session_from_senate_member_id(member_id)) == (last_session - first_session) + 1:
+                if len(self.senate_member_cache.get_session_from_senate_member_id(member_id)) == (last_session - first_session) + 1:
                     continue
 
                 for session_num in range(first_session, last_session + 1):
-                    self.member_cache.store_senate_member_to_session(session_num, member_id)
+                    self.senate_member_cache.store_senate_member_to_session(session_num, member_id)
 
     def populate_bill_cache(self):
         object_path = path.join(self.local_dir, '..', '..', 'obj', 'complete', self.pickle_file)
         bills = self.pickler.load_obj(object_path)
         for key in bills:
             bill = bills[key]
-            print(bill)
+            enacted = True
+            vetoed = True
+            if bill.get('enacted') is None or bill.get('latest_major_action') != 'Received in the Senate':
+                enacted = False
+            if bill.get('vetoed') is None:
+                vetoed = False
             congress_session = int(bill['bill_id'][len(bill['bill_id']) - 3: len(bill['bill_id'])])
             self.bill_cache.store_bill(bill.get('bill_id'), bill['title'], bill.get('short_title'), congress_session,
-                                       bill.get('introduced_date'), bill.get('congressdotgov_url'), )
+                                       dt.datetime.strptime(bill.get('introduced_date'), '%Y-%m-%d').toordinal(),
+                                       bill.get('congressdotgov_url'), bill.get('active'),
+                                       enacted, vetoed, bill.get('summary'), bill.get('latest_major_action'))
 
 
 if __name__ == "__main__":
-    transform = PickleToDB('Bill Set-105-Complete.pkl')
-    transform.populate_bill_cache()
-    # transform.populate_president_cache()
-    # transform.populate_congressional_sessions()
-    # transform.populate_president_to_session()
-    # transform.populate_members_cache()
-    # transform.populate_members_to_session()
+    transform = PickleToDB('House Members.pkl')
+    transform.populate_president_cache()
+    transform.populate_congressional_sessions()
+    transform.populate_president_to_session()
+    transform.populate_members_cache()
+    transform.populate_members_to_session()
+    transform = PickleToDB('Senate Members.pkl')
+    transform.populate_members_cache()
+    transform.populate_members_to_session()
+    for i in range(105, 117):
+        print(str(i))
+        transform = PickleToDB('Bill Set-' + str(i) + '-Complete.pkl')
+        transform.populate_bill_cache()
     # test = transform.member_cache.get_house_member_from_session(115)
     # print(test)
     # print(len(test))

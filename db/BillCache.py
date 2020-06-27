@@ -11,18 +11,28 @@ class BillCache:
         sql = 'INSERT INTO `BILL_KEYWORDS` (KEYWORD, BILL_ID, WEIGHT)'
         self.db.exec_insert(sql, (key_word, bill_data, weight))
 
-    def store_bill(self, id, title, short_title, congress_session, intro_date, congress_url, bill_url, active,
+    def store_bill(self, id, title, short_title, congress_session, intro_date, bill_url, active,
                    enacted, vetoed, summary, latest_major_action):
-        sql = 'INSERT INTO `BILLS` (ID, TITLE, SHORT_TITLE,' \
-              'CONGRESS_SESSION, INTRODUCED_DATE, CONGRESS_URL, BILL_URL,' \
-              'ACTIVE, ENACTED, VETOED, SUMMARY, LATEST_MAJOR_ACTION) VALUES (?, ?, ?, ?, ?, ?, ' \
+        sql = 'INSERT INTO `BILL` (ID, TITLE, SHORT_TITLE,' \
+              'CONGRESS_SESSION, INTRODUCED_DATE, BILL_URL,' \
+              'ACTIVE, ENACTED, VETOED, SUMMARY, LATEST_MAJOR_ACTION) VALUES (?, ?, ?, ?, ?, ' \
               '?, ?, ?, ?, ?, ?)'
-        self.db.exec_insert(sql, (id, title, short_title, congress_session, intro_date, congress_url, bill_url, active,
+        self.db.exec_insert(sql, (id, title, short_title, congress_session, intro_date, bill_url, active,
                    enacted, vetoed, summary, latest_major_action))
         # Note: make sure data is in tuple form
 
-    def get_bill(self, bill_id):
-        sql = 'SELECT * FROM `BILLS` WHERE BILL_ID=?'
+    def get_all_bills(self):
+        sql = 'SELECT * FROM `BILL`'
+        result = self.db.exec_select(sql).fetchall()
+        return result
+
+    def get_bill_from_session(self, session):
+        sql = 'SELECT * FROM `BILL` WHERE CONGRESS_SESSION=?'
+        result = self.db.exec_select(sql, (session, )).fetchall()
+        return result
+
+    def get_bill_from_bill_id(self, bill_id):
+        sql = 'SELECT * FROM `BILL` WHERE BILL_ID=?'
         result = self.db.exec_select(sql, (bill_id,)).fetchone()
         return result
 

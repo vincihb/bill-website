@@ -1,7 +1,7 @@
 from db.SqlExecutor import SqlExecutor
 
 
-class MemberCache:
+class SenateMemberCache:
     def __init__(self):
         self.db = SqlExecutor()
 
