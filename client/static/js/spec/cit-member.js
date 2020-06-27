@@ -20,6 +20,7 @@ class CITMember extends _BaseDOM {
     }
 
     render(data) {
+        console.log(data);
         this.appendChild(new ElementFactory(elements.H2, '', data.first_name + ' ' + data.last_name));
         this.appendChild(new ElementFactory(elements.HR));
         this.appendChild(new ElementFactory(elements.P, '', 'data here!'));

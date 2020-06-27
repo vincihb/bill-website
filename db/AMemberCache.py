@@ -12,7 +12,7 @@ class AMemberCache:
 		self._db = SqlExecutor()
 
 	def store_member_to_session(self, session_num, member_id):
-		sql = 'INSERT INTO `%s` (SESSION_NUMBER, MEMBER_ID) VALUES(?, ?)' % self._member_table
+		sql = 'INSERT INTO `%s` (SESSION_NUMBER, MEMBER_ID) VALUES(?, ?)' % self._session_table
 		self._db.exec_insert(sql, (session_num, member_id))
 
 	def get_all(self):
@@ -41,16 +41,15 @@ class AMemberCache:
 		return result
 
 	def get_from_session(self, session_number):
-		sql = 'SELECT * FROM `%s` INNER JOIN `%s` ON ' \
-			  '`%s`.MEMBER_ID=`%s`.ID '\
-			  'WHERE SESSION_NUMBER=?' \
-			  % self._session_table, self._member_table, self._session_table, self._member_table
+		sql = 'SELECT * FROM `' + self._session_table + '` INNER JOIN `' + self._member_table + '` ON ' \
+			  '`' + self._session_table + '`.MEMBER_ID=`' + self._member_table + '`.ID ' \
+			  'WHERE SESSION_NUMBER=?'
 		result = self._db.exec_select(sql, (session_number,)).fetchall()
 		return result
 
 	def get_session_by_id(self, member_id):
-		sql = 'SELECT * FROM `%s` INNER JOIN `CONGRESSIONAL_SESSION` ON ' \
-			  '`%s`.SESSION_NUMBER=`CONGRESSIONAL_SESSION`.NUMBER ' \
-			  'WHERE MEMBER_ID=?'  % self._session_table, self._session_table
+		sql = 'SELECT * FROM `' + self._session_table + '` INNER JOIN `CONGRESSIONAL_SESSION` ON ' \
+			  '`' + self._session_table + '`.SESSION_NUMBER=`CONGRESSIONAL_SESSION`.NUMBER ' \
+			  'WHERE MEMBER_ID=?'
 		result = self._db.exec_select(sql, (member_id,)).fetchall()
 		return result

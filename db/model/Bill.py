@@ -12,9 +12,13 @@ class Bill(ADBItem):
 	_committees = list()  # hold on to all associated committees in a list (using their committee codes)
 	_congress_url = ''  # congress.gov url
 	_long_summary = ''  # the actual summary (can be null)
-	_history = dict()   # dict of dicts for easy json conversion, {introduced: {date: <date>, success: <boolean>},
-						#											house: {...}, congress: {...}, president {...},
-						# 											law: {date: <date>, }}
+	_history = dict()  # dict of dicts for easy json conversion:
+	# {introduced: {date: <date>, success: <boolean>},
+	#	house: {...},
+	#	congress: {...},
+	#	president {...},
+	# 	law: {date: <date>, }}
+
 	_number = ''
 	_slug = ''
 	_short_summary = ''  # refers to the title
@@ -34,6 +38,7 @@ class Bill(ADBItem):
 		pass
 
 	""" Helper Methods """
+
 	def as_dict(self):
 		return {
 			'bill_id': self._id,

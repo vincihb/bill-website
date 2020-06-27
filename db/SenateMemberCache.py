@@ -3,7 +3,7 @@ from db.AMemberCache import AMemberCache
 
 class SenateMemberCache(AMemberCache):
     def __init__(self):
-        super().__init__('SENATE_MEMBER', 'SENATE_MEMBER_TO_SESSION')
+        self._setup('SENATE_MEMBER', 'SENATE_MEMBER_TO_SESSION')
 
     def store_senate_member(self,
                             id, first_name, mid_name, last_name, dob, gender, party,
