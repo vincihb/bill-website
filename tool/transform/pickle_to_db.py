@@ -156,14 +156,23 @@ class PickleToDB:
                 for session_num in range(first_session, last_session + 1):
                     self.member_cache.store_senate_member_to_session(session_num, member_id)
 
+    def populate_bill_cache(self):
+        object_path = path.join(self.local_dir, '..', '..', 'obj', 'complete', self.pickle_file)
+        bills = self.pickler.load_obj(object_path)
+        for key in bills:
+            bill = bills[key]
+            print(bill)
+            print(bill['bill_id'])
+
 
 if __name__ == "__main__":
-    transform = PickleToDB('House Members.pkl')
-    transform.populate_president_cache()
-    transform.populate_congressional_sessions()
-    transform.populate_president_to_session()
-    transform.populate_members_cache()
-    transform.populate_members_to_session()
-    test = transform.member_cache.get_house_member_from_session(115)
-    print(test)
-    print(len(test))
+    transform = PickleToDB('Bill Set-105-Complete.pkl')
+    transform.populate_bill_cache()
+    # transform.populate_president_cache()
+    # transform.populate_congressional_sessions()
+    # transform.populate_president_to_session()
+    # transform.populate_members_cache()
+    # transform.populate_members_to_session()
+    # test = transform.member_cache.get_house_member_from_session(115)
+    # print(test)
+    # print(len(test))
