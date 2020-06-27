@@ -19,7 +19,7 @@ class HouseMemberCache(AMemberCache):
               'TOTAL_PRESENT, OFFICE, PHONE, FAX, STATE, DISTRICT, AT_LARGE, ' \
               'MISSED_VOTES_PCT, VOTES_WITH_PARTY_PCT) ' \
               'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-        self.db.exec_insert(sql, (id, first_name, mid_name, last_name, dob, gender, party,
+        self._db.exec_insert(sql, (id, first_name, mid_name, last_name, dob, gender, party,
                                   leadership_role, twitter_account, facebook_account, youtube_account,
                                   cspan_id, icpsr_id, crp_id, fec_candidate_id, in_office, seniority,
                                   total_votes, missed_votes, total_present, office, phone, fax, state,
