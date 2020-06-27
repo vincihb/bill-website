@@ -1,7 +1,7 @@
 import json
 
 from db.BillCache import BillCache
-from db.Bill import Bill
+from db.model.Bill import Bill
 
 
 def bill_api_routes(app):
@@ -13,7 +13,7 @@ def bill_api_routes(app):
 
         data = {
             'success': True,
-            'data': Bill.from_db(bill_id).get_json()
+            'data': Bill.from_db_object(bill).get_json()
         }
 
         return json.dumps(data)
