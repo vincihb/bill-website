@@ -1,6 +1,6 @@
 import json
 
-from api.propublica.MemberCache import MemberCache
+from db.HouseMemberCache import MemberCache
 
 
 def member_api_routes(app):

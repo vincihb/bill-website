@@ -1,5 +1,5 @@
 from db.SqlExecutor import SqlExecutor
-from api.propublica.CongressCache import CongressCache
+from db.CongressCache import CongressCache
 
 
 class BillCache:
@@ -11,11 +11,14 @@ class BillCache:
         sql = 'INSERT INTO `BILL_KEYWORDS` (KEYWORD, BILL_ID, WEIGHT)'
         self.db.exec_insert(sql, (key_word, bill_data, weight))
 
-    def store_bill(self, data_tuple):
-        sql = 'INSERT INTO `BILLS` (ID, TITLE, CONGRESS_SESSION, INTRODUCED_DATE, CONGRESS_URL, BILL_URL,' \
+    def store_bill(self, id, title, short_title, congress_session, intro_date, congress_url, bill_url, active,
+                   enacted, vetoed, summary, latest_major_action):
+        sql = 'INSERT INTO `BILLS` (ID, TITLE, SHORT_TITLE,' \
+              'CONGRESS_SESSION, INTRODUCED_DATE, CONGRESS_URL, BILL_URL,' \
               'ACTIVE, ENACTED, VETOED, SUMMARY, LATEST_MAJOR_ACTION) VALUES (?, ?, ?, ?, ?, ?, ' \
               '?, ?, ?, ?, ?, ?)'
-        self.db.exec_insert(sql, data_tuple)
+        self.db.exec_insert(sql, (id, title, short_title, congress_session, intro_date, congress_url, bill_url, active,
+                   enacted, vetoed, summary, latest_major_action))
         # Note: make sure data is in tuple form
 
     def get_bill(self, bill_id):
@@ -29,7 +32,7 @@ class BillCache:
         return result
 
     def get_all_cosponsored_bills_for_member(self, member_id):
-        sql = 'SELECT * FROM `COSPONSOR` INNER JOIN `BILL` ON `COSPONSOR`.BILL_ID=`BILL`.ID WHERE MEMBER_ID=?';
+        sql = 'SELECT * FROM `COSPONSOR` INNER JOIN `BILL` ON `COSPONSOR`.BILL_ID=`BILL`.ID WHERE MEMBER_ID=?'
         result = self.db.exec_select(sql, (member_id,)).fetchall()
         return result
 

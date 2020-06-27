@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from db.CongressCache import CongressCache
+from db.CongressCacheUpperLayer import CongressCache
 import requests
 import json
 

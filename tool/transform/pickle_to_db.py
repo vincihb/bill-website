@@ -1,9 +1,9 @@
 from tool.Pickler import Pickler
-# from api.propublica.PropublicaScraper import PropublicaScraper
 from os import path
-from api.propublica.CongressCache import CongressCache
-from api.propublica.PresidentCache import PresidentCache
-from api.propublica.MemberCache import MemberCache
+from db.CongressCache import CongressCache
+from db.PresidentCache import PresidentCache
+from db.HouseMemberCache import MemberCache
+from db.BillCache import BillCache
 from db.SqlExecutor import SqlExecutor
 import json
 import datetime as dt
@@ -15,6 +15,7 @@ class PickleToDB:
         self.congress_cache = CongressCache()
         self.president_cache = PresidentCache()
         self.member_cache = MemberCache()
+        self.bill_cache = BillCache()
         self.sqlEx = SqlExecutor()
         self.pickle_file = pickle_file
         self.local_dir = path.dirname(path.abspath(__file__))
@@ -162,7 +163,9 @@ class PickleToDB:
         for key in bills:
             bill = bills[key]
             print(bill)
-            print(bill['bill_id'])
+            congress_session = int(bill['bill_id'][len(bill['bill_id']) - 3: len(bill['bill_id'])])
+            self.bill_cache.store_bill(bill.get('bill_id'), bill['title'], bill.get('short_title'), congress_session,
+                                       bill.get('introduced_date'), bill.get('congressdotgov_url'), )
 
 
 if __name__ == "__main__":

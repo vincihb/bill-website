@@ -1,6 +1,6 @@
 import json
 
-from api.propublica.BillCache import BillCache
+from db.BillCache import BillCache
 from db.Bill import Bill
 
 
