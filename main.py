@@ -8,4 +8,5 @@ app.debug = True
 # entry point to all server routes
 all_server_routes(app)
 
+print('Starting server running on http://localhost:%d' % conf.PORT)
 app.run(port=conf.PORT)

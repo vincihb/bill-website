@@ -2,7 +2,6 @@ from db.DatabaseManager import dbm
 from util.HMException import HMBillException
 import json
 from db.DBItem import DBItem
-from SQLProxy import SQLProxy
 
 """
 Class for interface with specific bills
@@ -73,47 +72,9 @@ class Bill(DBItem):
 			{'bill_id': self._item_id, 'state': self._state, 'author': self._author, 'name': self._title}
 		)
 
-
-""" Static Helper Class Dedicated to SQL interaction for the Bill class"""
-
-
-class BillSqlProxy(SQLProxy):
-
-	""" Queries With DB Impact """
 	@staticmethod
-	def insert(b: Bill):
-		if b.is_valid() and b.get_db_status() == 'no-init':
-			query = 'INSERT INTO bill (author, state, name) VALUES (%s, %s, %s)'
-			dbm.change_of_state_query(query_string=query, args=(b.get_author(), b.get_state(), b.get_title()))
-		else:
-			raise HMBillException('Insert attempted for invalid or incomplete bill')
-
-	@staticmethod
-	def update(b: Bill):
-		if b.is_valid():
-			query = 'UPDATE bill SET author=%s, state=%s, name=%s, history=%s WHERE id=%d'
-			dbm.change_of_state_query(
-				query_string=query, args=(b.get_author(), b.get_state(), b.get_title(), b.get_history(), b.get_id()))
-		else:
-			raise HMBillException('Update attempted for invalid or incomplete bill')
-
-	""" Queries Without DB Impact """
-	@staticmethod
-	def get_by_name(name):
-		if name != '':
-			query = 'SELECT * FROM bill WHERE name=%s'
-			return dbm.reception_query(query_string=query, args=(name,))
-		else:
-			raise HMBillException('Invalid name argument to Bill.query_by_name')
-
-	@staticmethod
-	def get_by_id(bill_id):
-		if bill_id > -1:
-			query = 'SELECT * FROM bill WHERE id=%s'
-			return dbm.reception_query(query_string=query, args=(bill_id,))
-		else:
-			raise HMBillException('Invalid index argument to Bill.query_by_id')
-
+	def from_db(db_object):
+		return Bill(bill_exists=True, title=db_object['title'], author=db_object['author'], bill_id=db_object['id'])
 
 """
 Class built for interaction with the rest of the world, the raw Bill class can be used
@@ -122,7 +83,8 @@ but the BillSqlProxy should NOT
 
 
 class BillManager:
-	_proxy = BillSqlProxy()
+	# BillSqlProxy()
+	_proxy = None
 
 	def parse_request(self, data: dict):
 		if 'bill_id' in data:
