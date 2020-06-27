@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from db.CongressCacheUpperLayer import CongressCache
+from db.legacy.CongressionalSession import CongressCache
 import requests
 import json
 
@@ -46,12 +46,12 @@ def get_bioguide_url(first, last, last_name_only=False):
 	links = soup.find_all('a')
 
 	if len(links) > 1:
-		html2 = requests.get(links[0].get('href'))
+		html2 = requests.get(links[0].get())
 		soup2 = BeautifulSoup(html2.content, 'html.parser')
 		imgs = soup2.find_all('img')
 
 		if len(imgs) > 1:
-			url = 'http:' + imgs[1].get('src')  # must append the http: to retrieved urls from this source
+			url = 'http:' + imgs[1].get()  # must append the http: to retrieved urls from this source
 			cache = cache_photo_url(url, first, last)
 			return cache.get_json()
 
@@ -77,7 +77,7 @@ def get_wiki_photo(first, last):
 		soupy = BeautifulSoup(html.content, 'html.parser')
 		imgs = soupy.find_all('img')
 		if len(imgs) > 1:
-			url = imgs[0].get('src')
+			url = imgs[0].get()
 			cache = cache_photo_url(url, first, last)
 			return cache.get_json()
 

@@ -1,5 +1,6 @@
-""" Abstract Class Modelling Basic Behaviors of any Item Represented in the DB
-    These are a little bit nicer to work with than the tuples and dicts that the mysql Python API returns
+"""
+	Abstract Class Modelling Basic Behaviors of any Item Represented in the DB
+	These are a little bit nicer to work with than the tuples and dicts that the mysql Python API returns
 """
 
 

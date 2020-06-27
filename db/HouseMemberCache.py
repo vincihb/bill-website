@@ -1,9 +1,10 @@
-from db.SqlExecutor import SqlExecutor
+from db.AMemberCache import AMemberCache
 
 
-class HouseMemberCache:
+class HouseMemberCache(AMemberCache):
     def __init__(self):
-        self.db = SqlExecutor()
+        super().__init__()
+        self._setup('HOUSE_MEMBER', 'HOUSE_MEMBER_TO_SESSION')
 
     def store_house_member(self,
                               id, first_name, mid_name, last_name, dob, gender, party,
@@ -27,46 +28,10 @@ class HouseMemberCache:
         # Note, make sure that the member_data is a tuple and that it is structured properly in the order as above
 
     def store_house_member_to_session(self, session_num, member_id):
-        sql = 'INSERT INTO `HOUSE_MEMBER_TO_SESSION` (SESSION_NUMBER, MEMBER_ID) VALUES(?, ?)'
-        self.db.exec_insert(sql, (session_num, member_id))
-
-    def get_all_house_members_data(self):
-        sql = 'SELECT * FROM `HOUSE_MEMBER`'
-        result = self.db.exec_select(sql).fetchall()
-        return result
+        return self.store_member_to_session(session_num, member_id)
 
     def get_house_member_by_id(self, member_id):
-        sql = 'SELECT * FROM `HOUSE_MEMBER` WHERE ID=?'
-        result = self.db.exec_select(sql, (member_id,)).fetchone()
-        return result
-
-    def get_house_member_last_name(self, member_last_name):
-        sql = 'SELECT * FROM `HOUSE_MEMBER` WHERE LAST_NAME=?'
-        result = self.db.exec_select(sql, (member_last_name,)).fetchall()
-        return result
-
-    def get_house_member_first_name(self, member_first_name):
-        sql = 'SELECT * FROM `HOUSE_MEMBER` WHERE FIRST_NAME=?'
-        result = self.db.exec_select(sql, (member_first_name,)).fetchall()
-        return result
-
-    def get_house_member_district_name(self, district):
-        sql = 'SELECT * FROM `HOUSE_MEMBER` WHERE DISTRICT=?'
-        result = self.db.exec_select(sql, (district,)).fetchall()
-        return result
-
-    def get_house_member_from_session(self, session_number):
-        sql = 'SELECT * FROM `HOUSE_MEMBER_TO_SESSION` INNER JOIN `HOUSE_MEMBER` ON ' \
-              '`HOUSE_MEMBER_TO_SESSION`.MEMBER_ID=`HOUSE_MEMBER`.ID ' \
-              'WHERE SESSION_NUMBER=?'
-        result = self.db.exec_select(sql, (session_number,)).fetchall()
-        return result
+        return self.get_by_id(member_id)
 
     def get_session_from_house_member_id(self, member_id):
-        sql = 'SELECT * FROM `HOUSE_MEMBER_TO_SESSION` INNER JOIN `CONGRESSIONAL_SESSION` ON ' \
-              '`HOUSE_MEMBER_TO_SESSION`.SESSION_NUMBER=`CONGRESSIONAL_SESSION`.NUMBER ' \
-              'WHERE MEMBER_ID=?'
-        result = self.db.exec_select(sql, (member_id,)).fetchall()
-        return result
-
-
+        return self.get_session_by_id(member_id)
