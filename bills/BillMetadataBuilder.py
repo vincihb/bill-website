@@ -10,6 +10,7 @@ class BillMetadataBuilder:
         self.bill = bill
         self.stripped_tokens = []
         self.bow = []
+        self.top_10 = []
         self.top_25 = []
         self.top_25_words = []
         self.top_10_nouns = []
@@ -36,6 +37,11 @@ class BillMetadataBuilder:
         self.bow = bill_bow
         return bill_bow
 
+    def get_total_words(self, corpus=''):
+        if len(self.bow) == 0:
+            self.get_bag_of_words(corpus)
+        return len(self.bow)
+
     def get_top_25_words(self, corpus=''):
         if len(self.bow) == 0:
             self.get_bag_of_words(corpus)
@@ -46,10 +52,21 @@ class BillMetadataBuilder:
         c = Counter(self.bow)
 
         self.top_25 = c.most_common(25)
-
         # extract just the words, just in case we just want those
         self.top_25_words = [w[0] for w in self.top_25]
         return self.top_25_words
+
+    def get_top_10_words(self, corpus=''):
+        if len(self.bow) == 0:
+            self.get_bag_of_words(corpus)
+
+        if len(self.top_10) > 0:
+            return self.top_10
+
+        c = Counter(self.bow)
+
+        self.top_10 = c.most_common(10)
+        return self.top_10
 
     def get_title_pos(self):
         if len(self.title_pos) > 0:

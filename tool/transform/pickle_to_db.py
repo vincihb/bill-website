@@ -164,10 +164,11 @@ class PickleToDB:
         bills = self.pickler.load_obj(object_path)
         for key in bills:
             bill = bills[key]
-            enacted = True
             vetoed = True
-            if bill.get('enacted') is None or bill.get('latest_major_action') != 'Received in the Senate':
+            if bill.get('latest_major_action') != 'Received in the Senate.' and bill.get('enacted') is None:
                 enacted = False
+            else:
+                enacted = True
             if bill.get('vetoed') is None:
                 vetoed = False
             congress_session = int(bill['bill_id'][len(bill['bill_id']) - 3: len(bill['bill_id'])])
@@ -179,14 +180,20 @@ class PickleToDB:
 
 if __name__ == "__main__":
     transform = PickleToDB('House Members.pkl')
+    print("Populating president's cache")
     transform.populate_president_cache()
+    print("Populating congressional sessions")
     transform.populate_congressional_sessions()
+    print("Linking presidents to sessions")
     transform.populate_president_to_session()
+    print("Populating house members")
     transform.populate_members_cache()
     transform.populate_members_to_session()
+    print("Populating senate members")
     transform = PickleToDB('Senate Members.pkl')
     transform.populate_members_cache()
     transform.populate_members_to_session()
+    print("Populating bill set")
     for i in range(105, 117):
         print(str(i))
         transform = PickleToDB('Bill Set-' + str(i) + '-Complete.pkl')
