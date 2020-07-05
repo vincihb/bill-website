@@ -24,6 +24,7 @@ class CITMember extends _BaseDOM {
         this.appendChild(new ElementFactory(elements.H2, '', data.first_name + ' ' + data.last_name));
         this.appendChild(new ElementFactory(elements.HR));
         this.appendChild(new ElementFactory(elements.P, '', 'data here!'));
+        this.appendChild(new IconLinkElement('/assets/state/' + window.STATE_MAP[data.state.toLowerCase()], data.state, data.state))
     }
 }
 

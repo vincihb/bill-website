@@ -1,5 +1,7 @@
 import json
 
+from flask import request
+
 from db.HouseMemberCache import HouseMemberCache
 from db.SenateMemberCache import SenateMemberCache
 from db.model.SenateMember import SenateMember
@@ -24,3 +26,11 @@ def member_api_routes(app):
         return json.dumps(
             {'success': True, 'data': out_data}
         )
+
+    @app.route("/api/members", methods=['GET'])
+    def get_all_members_api():
+        page_num = request.args.get('page')
+        if page_num is None:
+            return json.dumps({'success': True, 'data': HouseMember.get_all()})
+
+        return json.dumps({'success': False, 'data': []})

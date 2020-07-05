@@ -1,4 +1,5 @@
 from db.model.ACongressionalMember import ACongressionalMember
+from db.HouseMemberCache import HouseMemberCache
 
 
 class HouseMember(ACongressionalMember):
@@ -24,6 +25,15 @@ class HouseMember(ACongressionalMember):
         self.set_common_member_fields(db_row)
         self.DISTRICT = db_row["DISTRICT"]
         self.AT_LARGE = db_row["AT_LARGE"]
+
+    @staticmethod
+    def get_all():
+        all_structured_members = []
+        all_members = HouseMemberCache().get_all()
+        for member in all_members:
+            all_structured_members.append(HouseMember.from_db(member).as_dict())
+
+        return all_structured_members
 
     @staticmethod
     def from_db(db_object):

@@ -4,9 +4,11 @@
 {% endblock %}
 {% block js_includes %}
     <script type="text/javascript" src="/js/util/state-map.js"></script>
-    <script type="text/javascript" src="/js/spec/cit-member.js"></script>
+    <script type="text/javascript" src="/alb-js/table/managed-table.js"></script>
+    <script type="text/javascript" src="/js/table/cit-member-list.js"></script>
 {% endblock %}
 {% block body %}
-    <br /><br />
-    <cit-member></cit-member>
+    <h2>All House Members</h2>
+    <hr />
+    <cit-member-list></cit-member-list>
 {% endblock %}
