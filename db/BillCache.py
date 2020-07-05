@@ -7,9 +7,9 @@ class BillCache:
         self.db = SqlExecutor()
         self.congress_cache = CongressCache()
 
-    def store_keyword_to_bill(self, key_word, bill_data, weight):
-        sql = 'INSERT INTO `BILL_KEYWORDS` (KEYWORD, BILL_ID, WEIGHT)'
-        self.db.exec_insert(sql, (key_word, bill_data, weight))
+    def store_keyword_to_bill(self, key_word, bill_id, weight):
+        sql = 'INSERT INTO `BILL_KEYWORDS` (KEYWORD, BILL_ID, WEIGHT) VALUES (?, ?, ?)'
+        self.db.exec_insert(sql, (key_word, bill_id, weight))
 
     def store_bill(self, id, title, short_title, congress_session, intro_date, bill_url, active,
                    enacted, vetoed, summary, latest_major_action):
@@ -45,6 +45,25 @@ class BillCache:
         sql = 'SELECT * FROM `COSPONSOR` INNER JOIN `BILL` ON `COSPONSOR`.BILL_ID=`BILL`.ID WHERE MEMBER_ID=?'
         result = self.db.exec_select(sql, (member_id,)).fetchall()
         return result
+
+    def get_bills_from_keyword(self, keyword):
+        sql = 'SELECT * FROM `BILL_KEYWORDS` WHERE KEYWORD=?'
+        result = self.db.exec_select(sql, (keyword,)).fetchall()
+        return result
+
+    def get_top_bills_from_keywords(self, keywords):
+        bill_keyword = {}
+        for keyword in keywords:
+            result_list = self.get_bills_from_keyword(keyword)
+            for result_dict in result_list:
+                bill_id = result_dict.get('BILL_ID')
+                weight = result_dict.get('WEIGHT')
+                if bill_id not in bill_keyword:
+                    bill_keyword.update({bill_id: weight})
+                else:
+                    old_weight = bill_keyword.get(bill_id)
+                    bill_keyword.update({bill_id: weight + old_weight})
+        return sorted(bill_keyword.items(), key=lambda x: x[1], reverse=True)
 
     def check_cache(self, bill_id):
         session_num = int(bill_id[len(bill_id) - 3: len(bill_id)])

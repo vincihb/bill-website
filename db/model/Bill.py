@@ -1,5 +1,7 @@
+from bills.ExtractiveSummarizer import ExtractiveSummarizer
 from db.model.ADBItem import ADBItem
-
+from bills.BillMetadataBuilder import BillMetadataBuilder
+from db.BillCache import BillCache
 """
 Class for interface with specific bills
 """
@@ -30,6 +32,16 @@ class Bill(ADBItem):
 
 	def __init__(self):
 		pass
+
+	@staticmethod
+	def search(string):
+		result = BillMetadataBuilder.get_stripped_bag_of_words(string)
+		all_words = set(result)
+		all_words = ExtractiveSummarizer.stem_list(all_words)
+		print(all_words)
+		result = BillCache().get_top_bills_from_keywords(all_words)
+		print(result)
+		return result
 
 	def save(self):
 		pass

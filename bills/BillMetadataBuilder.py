@@ -3,6 +3,7 @@ from nltk.tokenize import word_tokenize
 from nltk import pos_tag
 from collections import Counter
 from string import punctuation
+import re
 
 
 class BillMetadataBuilder:
@@ -107,6 +108,7 @@ class BillMetadataBuilder:
 
     @staticmethod
     def get_stripped_bag_of_words(corpus):
+        corpus = re.sub(r'[^\w\s]', '', corpus)
         stop_words = list(punctuation) + stopwords.words('english') + ['bill', 'act']
         bow = []
         for w in corpus.lower().split():
